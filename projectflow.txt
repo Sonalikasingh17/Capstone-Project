@@ -86,7 +86,7 @@ also do - dvc commit
 If the path points to your Anaconda environment (e.g., C:\Users\Personal\anaconda3\...), it’s a conflicting installation.
 
 * Uninstall Python-Based AWS CLI(Remove the conflicting AWS CLI from your Python environment): pip uninstall awscli
-* Verify it's uninstalled: aws --version
+* Verify it's uninstalled:yaml
 * Update Environment Variables:
 > Make sure the .msi AWS CLI path is in your system PATH (usually installed at C:\Program Files\Amazon\AWSCLIV2\aws.exe).
 > Add it to your PATH if missing: Open Control Panel > System > Advanced System Settings > Environment Variables. Under "System Variables," find Path, and add the AWS CLI path: C:\Program Files\Amazon\AWSCLIV2\
