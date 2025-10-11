@@ -32,6 +32,7 @@ You’ll learn how to build, version, deploy, and monitor a machine learning mod
 
 
 Capstone-Project/
+```
 │
 ├── src/
 │ ├── logger/
@@ -55,7 +56,7 @@ Capstone-Project/
 ├── Dockerfile
 ├── .github/workflows/ci.yaml
 └── README.md
-
+```
 ---
 
 ## ⚙️ Tech Stack
@@ -73,7 +74,7 @@ Capstone-Project/
 ---
 
 <details>
-<summary>🧰 <b>1️⃣ Project Setup</b></summary>
+<details> <summary>🧰 <b>1️⃣ Project Setup</b></summary>
 
 ```bash
 # Create virtual environment
@@ -91,19 +92,221 @@ git commit -m "Initial setup"
 git push
 ```
 
-<details> 
+</details> 
 
 <details> <summary>📊 <b>2️⃣ Setup MLflow Tracking (Dagshub)</b></summary>
 
-Go to Dagshub Dashboard
+- Go to Dagshub Dashboard
+- Create a new repo and connect your GitHub repository
+- Copy the MLflow tracking URL & integrate it into your notebooks
+- Install dependencies
 
-Create a new repo and connect your GitHub repository
-
-Copy the MLflow tracking URL & integrate it into your notebooks
-
-Install dependencies
 ```bash
 pip install dagshub mlflow
 ```
+</details> 
 
-<details> 
+<details> <summary>🗃️ <b>3️⃣ Setup Data Version Control (DVC)</b></summary>
+  
+```bash
+dvc init
+mkdir local_s3
+dvc remote add -d mylocal local_s3
+```
+
+Add these files:
+- dvc.yaml
+- params.yaml
+
+Then run:
+
+```bash
+dvc repro
+dvc status
+git add .
+git commit -m "DVC pipeline ready"
+git push
+```
+
+</details>
+<details> <summary>☁️ <b>4️⃣ Connect AWS S3 Storage</b></summary>
+  
+```bash
+pip install dvc[s3] awscli
+aws configure
+dvc remote add -d myremote s3://<your-bucket-name>
+dvc push
+```
+
+</details>
+<details> <summary>🌐 <b>5️⃣ Flask App Setup</b></summary>
+
+```bash
+cd flask_app
+pip install flask
+python app.py
+```
+
+Your local app will be available at
+
+```cpp
+👉 http://127.0.0.1:5000
+```
+
+</details>
+<details> <summary>🤖 <b>6️⃣ CI/CD Pipeline Setup</b></summary>
+
+- Add .github/workflows/ci.yaml
+- Generate a token from Dagshub → Settings → Tokens
+- Save token in GitHub → Secrets → CAPSTONE_TEST
+- Add testing directories:
+
+```bash
+tests/
+scripts/
+```
+
+</details>
+<details> <summary>🐳 <b>7️⃣ Dockerize the App</b></summary>
+
+```bash
+cd flask_app
+pip install pipreqs
+pipreqs . --force
+cd ..
+docker build -t capstone-app:latest .
+docker run -p 8888:5000 -e CAPSTONE_TEST=<your_token> capstone-app:latest
+```
+
+</details>
+<details> <summary>☁️ <b>8️⃣ AWS EKS Deployment</b></summary>
+
+```bash
+eksctl create cluster --name flask-app-cluster --region us-east-1 \
+--nodegroup-name flask-app-nodes --node-type t3.small \
+--nodes 1 --nodes-min 1 --nodes-max 1 --managed
+```
+
+Then check:
+
+```bash
+aws eks list-clusters
+kubectl get nodes
+kubectl get svc flask-app-service
+```
+
+Visit your deployed app via:
+
+```cpp
+http://<external-ip>:5000
+```
+
+</details>
+<details> <summary>📈 <b>9️⃣ Monitoring with Prometheus & Grafana</b></summary>
+  
+🧭 Prometheus (Port 9090)
+
+```bash
+wget https://github.com/prometheus/prometheus/releases/download/v2.46.0/prometheus-2.46.0.linux-amd64.tar.gz
+tar -xvzf prometheus-2.46.0.linux-amd64.tar.gz
+sudo mv prometheus /etc/prometheus
+sudo mv /etc/prometheus/prometheus /usr/local/bin/
+```
+
+Update config file:
+
+```yaml
+scrape_configs:
+  - job_name: "flask-app"
+    static_configs:
+      - targets: ["<external-ip>:5000"]
+```
+
+Run:
+
+```bash
+/usr/local/bin/prometheus --config.file=/etc/prometheus/prometheus.yml
+```
+
+📊 Grafana (Port 3000)
+
+```bash
+wget https://dl.grafana.com/oss/release/grafana_10.1.5_amd64.deb
+sudo apt install ./grafana_10.1.5_amd64.deb -y
+sudo systemctl start grafana-server
+sudo systemctl enable grafana-server
+```
+
+Access at:
+
+```cpp
+👉 http://<ec2-public-ip>:3000 (admin / admin)
+```
+
+</details>
+
+
+---
+
+
+# 🧹 AWS Resource Cleanup
+
+Clean up resources after testing to avoid costs 💸
+
+```bash
+kubectl delete deployment flask-app
+kubectl delete service flask-app-service
+kubectl delete secret capstone-secret
+eksctl delete cluster --name flask-app-cluster --region us-east-1
+
+```
+Also, delete ECR images, S3 bucket, and CloudFormation stacks.
+
+---
+
+
+🧩 Key Concepts
+
+| Concept              | Description                            |
+| -------------------- | -------------------------------------- |
+| **MLflow**           | Track experiments, metrics, and models |
+| **DVC**              | Data & model version control           |
+| **Docker**           | Package and run app in containers      |
+| **EKS (Kubernetes)** | Deploy containerized app on AWS        |
+| **Prometheus**       | Collect and store metrics              |
+| **Grafana**          | Visualize app health dashboards        |
+
+---
+
+🏁 Final Results
+
+✅ End-to-End ML pipeline built with modular components
+✅ Cloud deployment on AWS using CI/CD
+✅ Real-time monitoring and metrics visualization
+
+---
+
+👩‍💻 Author
+Sonalika Singh
+📫 Medium Blogs
+🌐 GitHub Profile
+
+---
+
+🌟 Star This Repository
+
+If you find this project helpful, please give it a ⭐ on GitHub
+ — it keeps me motivated!
+
+---
+
+🧭 Next Steps
+
+ - Add unit testing for each pipeline stage
+ - Integrate Kubernetes auto-scaling
+ - Enhance Grafana dashboard visualizations
+
+ ---
+
+“Build once, automate forever.” 💡
+— Sonalika Singh
