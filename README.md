@@ -73,7 +73,7 @@ Capstone-Project/
 
 ---
 
-<details>
+</details>
 <details> <summary>🧰 <b>1️⃣ Project Setup</b></summary>
 
 ```bash
@@ -242,30 +242,38 @@ Access at:
 ```cpp
 👉 http://<ec2-public-ip>:3000 (admin / admin)
 ```
-
 </details>
 
 
 ---
 
 
-# 🧹 AWS Resource Cleanup
+## 🧹 AWS Resource Cleanup
 
-Clean up resources after testing to avoid costs 💸
+Clean up resources after testing to avoid extra AWS costs 💸
 
 ```bash
+# Delete Kubernetes deployment and service
 kubectl delete deployment flask-app
 kubectl delete service flask-app-service
 kubectl delete secret capstone-secret
+
+# Delete EKS Cluster
 eksctl delete cluster --name flask-app-cluster --region us-east-1
 
+# Verify deletion
+eksctl get cluster --region us-east-1
+
 ```
-Also, delete ECR images, S3 bucket, and CloudFormation stacks.
+Also:
+- 🧹 Delete ECR images
+- 🧺 Remove S3 buckets
+- 📦 Check CloudFormation and delete remaining stacks if needed
 
 ---
 
 
-🧩 Key Concepts
+## 🧩 Key Concepts
 
 | Concept              | Description                            |
 | -------------------- | -------------------------------------- |
@@ -278,29 +286,30 @@ Also, delete ECR images, S3 bucket, and CloudFormation stacks.
 
 ---
 
-🏁 Final Results
+## 🏁 Final Results
 
-✅ End-to-End ML pipeline built with modular components
-✅ Cloud deployment on AWS using CI/CD
-✅ Real-time monitoring and metrics visualization
-
----
-
-👩‍💻 Author
-Sonalika Singh
-📫 Medium Blogs
-🌐 GitHub Profile
+- ✅ Fully automated end-to-end ML pipeline
+- ✅ Deployed on AWS with Docker & EKS
+- ✅ CI/CD integration via GitHub Actions
+- ✅ Real-time monitoring using Prometheus & Grafana
 
 ---
 
-🌟 Star This Repository
-
-If you find this project helpful, please give it a ⭐ on GitHub
- — it keeps me motivated!
+## 👩‍💻 Author
+**Sonalika Singh**
+- 📫[Medium Blogs](https://medium.com/@singhsonalika5)
+- 🌐 [GitHub Profile](https://github.com/Sonalikasingh17)
 
 ---
 
-🧭 Next Steps
+## 🌟 Star This Repository
+
+If you find this project helpful, please give it a ⭐ on [GitHub](https://github.com/Sonalikasingh17/Capstone-Project)
+ — it keeps me motivated! 💪
+
+---
+
+## 🧭 Next Steps
 
  - Add unit testing for each pipeline stage
  - Integrate Kubernetes auto-scaling
@@ -309,4 +318,5 @@ If you find this project helpful, please give it a ⭐ on GitHub
  ---
 
 “Build once, automate forever.” 💡
-— Sonalika Singh
+
+— *Sonalika Singh*
