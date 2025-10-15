@@ -11,7 +11,7 @@
 > 🧠 A complete **Machine Learning Operations (MLOps)** pipeline — from local development to cloud deployment and monitoring.
 
 ---
-
+ 
 ## 🧩 Project Overview
 
 This Capstone Project automates the **end-to-end ML lifecycle** using modern DevOps and MLOps tools.  
